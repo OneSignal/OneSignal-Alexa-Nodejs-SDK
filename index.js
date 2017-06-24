@@ -63,9 +63,9 @@ var OneSignal = {
   _stateSetup: function(mainScope) {
     OneSignal._scope_attributes = mainScope.attributes['onesignal_sdk'];
 
-    if (typeof OneSignal._scope_attributes == 'undefined')
+    if (typeof OneSignal._scope_attributes == 'undefined') {
       OneSignal._scope_attributes = {};
-    else {
+    } else {
       if (OneSignal._scope_attributes.userId !== undefined)
         OneSignal._userId = OneSignal._scope_attributes.userId;
     }
@@ -96,8 +96,9 @@ var OneSignal = {
 
   sendTags: function(tags) {
     if (OneSignal._userId == null) {
-       if (OneSignal._pendingTags == null)
+       if (OneSignal._pendingTags == null) {
          OneSignal._pendingTags = {};
+       }
        Object.assign(OneSignal._pendingTags, tags);
        return;
     }
@@ -109,8 +110,9 @@ var OneSignal = {
   _registerDevice: function(data, mainScope, callback) {
     var url_path = API_BASE_PATH + "players";
 
-    if (OneSignal._userId != null)
+    if (OneSignal._userId != null) {
        url_path += "/" + OneSignal._userId + "/on_session";
+    }
 
     var options = {
       host: API_HOST,
@@ -130,8 +132,9 @@ var OneSignal = {
         if (typeof JSON.parse(data).id != 'undefined') {
            OneSignal._userId = JSON.parse(data).id;
 
-           if (OneSignal._pendingTags == null)
+           if (OneSignal._pendingTags == null) {
              OneSignal.sendTags(OneSignal._pendingTags);
+           }
 
            OneSignal._scope_attributes.userId = OneSignal._userId;
            mainScope.attributes['onesignal_sdk'] = OneSignal._scope_attributes;
@@ -151,8 +154,9 @@ var OneSignal = {
 
   _newSession: function(mainScope) {
     var event = mainScope.event;
-    if (!event.session.new)
+    if (!event.session.new) {
       return;
+    }
 
     var devicePayload = {
        app_id: OneSignal._appId,
@@ -188,31 +192,35 @@ var OneSignal = {
   },
 
   _processMessageReceived: function(event) {
-     if (event.request.type != 'Messaging.MessageReceived')
+     if (event.request.type != 'Messaging.MessageReceived') {
         return;
+     }
 
      if (!OneSignal.hasNotificationPermissions(event)) {
-       if (OneSignal._userId != null)
+       if (OneSignal._userId != null) {
          OneSignal._userPut({notification_types: 0}, "unsubscribing");
+       }
        return;
      }
 
       var expiryTime = new Date();
 
-      if (event.request.message.ttl === undefined)
+      if (event.request.message.ttl === undefined) {
         expiryTime.setHours(expiryTime.getHours() + 24);
-      else {
+      } else {
         // Ensure we are not going over the 24 hour max limit.
         var secOffset = event.request.message.ttl;
-        if (secOffset> 86400)
+        if (secOffset> 86400) {
           secOffset = 86400;
+        }
 
         expiryTime.setSeconds(expiryTime.getSeconds() + secOffset);
       }
 
       var display_title = event.request.message.display_title;
-      if (typeof display_title == 'undefined')
+      if (typeof display_title == 'undefined') {
         display_title = event.request.message.spoken_text;
+      }
 
       OneSignal._createNotification(event.context.System.user.permissions.consentToken, {
         "expiryTime": expiryTime.toISOString(),
