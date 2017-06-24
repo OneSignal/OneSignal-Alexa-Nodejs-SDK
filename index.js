@@ -52,11 +52,11 @@ var OneSignal = {
   // Alexa Skill event handlers
   _alexaHandlers: {
    // Messaging.MessageReceived':
-    'Unhandled': function() {
+    Unhandled: function() {
       OneSignal._stateSetup(this);
       OneSignal._processMessageReceived(this.event);
     },
-    'LaunchRequest': function () {
+    LaunchRequest: function () {
       OneSignal._stateSetup(this);
       OneSignal._newSession(this);
     }
