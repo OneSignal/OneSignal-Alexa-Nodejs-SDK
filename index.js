@@ -27,6 +27,8 @@
 
 const VERSION =  "000900";
 const API_HOST =  "onesignal.com";
+const ONE_DAY_SECONDS = 86400;
+const ALEXA_DEVICE_TYPE = 10;
 
 const API_BASE_PATH =  "/api/v1/";
 const API_DEFAULT_HEADERS = {
@@ -160,7 +162,7 @@ var OneSignal = {
 
     var devicePayload = {
        app_id: OneSignal._appId,
-       device_type: 10,
+       device_type: ALEXA_DEVICE_TYPE,
        sdk: OneSignal._VERSION,
        notification_types: OneSignal.hasNotificationPermissions(event) ? 1 : 0,
        identifier: event.context.System.user.userId
@@ -210,8 +212,8 @@ var OneSignal = {
       } else {
         // Ensure we are not going over the 24 hour max limit.
         var secOffset = event.request.message.ttl;
-        if (secOffset> 86400) {
-          secOffset = 86400;
+        if (secOffset> ONE_DAY_SECONDS) {
+          secOffset = ONE_DAY_SECONDS;
         }
 
         expiryTime.setSeconds(expiryTime.getSeconds() + secOffset);
