@@ -190,62 +190,62 @@ var OneSignal = {
   },
 
   hasNotificationPermissions : function(event) {
-     var permissions = event.context.System.user.permissions;
-     return typeof permissions != 'undefined' && typeof permissions.consentToken != 'undefined';
+    var permissions = event.context.System.user.permissions;
+    return typeof permissions != 'undefined' && typeof permissions.consentToken != 'undefined';
   },
 
   _processMessageReceived: function(event) {
-     if (event.request.type != 'Messaging.MessageReceived') {
-        return;
-     }
+    if (event.request.type != 'Messaging.MessageReceived') {
+      return;
+    }
 
-     if (!OneSignal.hasNotificationPermissions(event)) {
-       if (OneSignal._userId != null) {
-         OneSignal._userPut({notification_types: 0}, 'unsubscribing');
-       }
-       return;
-     }
+    if (!OneSignal.hasNotificationPermissions(event)) {
+      if (OneSignal._userId != null) {
+        OneSignal._userPut({notification_types: 0}, 'unsubscribing');
+      }
+      return;
+    }
 
-      var expiryTime = new Date();
+    var expiryTime = new Date();
 
-      if (event.request.message.ttl === undefined) {
-        expiryTime.setHours(expiryTime.getHours() + 24);
-      } else {
-        // Ensure we are not going over the 24 hour max limit.
-        var secOffset = event.request.message.ttl;
-        if (secOffset> ONE_DAY_SECONDS) {
-          secOffset = ONE_DAY_SECONDS;
-        }
-
-        expiryTime.setSeconds(expiryTime.getSeconds() + secOffset);
+    if (event.request.message.ttl === undefined) {
+      expiryTime.setHours(expiryTime.getHours() + 24);
+    } else {
+      // Ensure we are not going over the 24 hour max limit.
+      var secOffset = event.request.message.ttl;
+      if (secOffset> ONE_DAY_SECONDS) {
+        secOffset = ONE_DAY_SECONDS;
       }
 
-      var display_title = event.request.message.display_title;
-      if (typeof display_title == 'undefined') {
-        display_title = event.request.message.spoken_text;
-      }
+      expiryTime.setSeconds(expiryTime.getSeconds() + secOffset);
+    }
 
-      OneSignal._createNotification(event.context.System.user.permissions.consentToken, {
-        expiryTime: expiryTime.toISOString(),
-        referenceId: event.request.message.custom.i,
-        spokenInfo: {
-          content:[{
-             locale: 'en-US',
-             text: event.request.message.spoken_text
-             // ssml: '<speak>Overrides text</speak>'
-          }]
-        },
-        displayInfo:{
-          content:[{
-            locale: 'en-US',
-            toast: {
-              primaryText: event.request.message.spoken_text
-            },
-            title: display_title,
-            bodyItems:[{ primaryText: event.request.message.spoken_text}]
-         }]
-        }
-      });
+    var display_title = event.request.message.display_title;
+    if (typeof display_title == 'undefined') {
+      display_title = event.request.message.spoken_text;
+    }
+
+    OneSignal._createNotification(event.context.System.user.permissions.consentToken, {
+      expiryTime: expiryTime.toISOString(),
+      referenceId: event.request.message.custom.i,
+      spokenInfo: {
+        content:[{
+          locale: 'en-US',
+          text: event.request.message.spoken_text
+          // ssml: '<speak>Overrides text</speak>'
+        }]
+      },
+      displayInfo:{
+        content:[{
+          locale: 'en-US',
+          toast: {
+            primaryText: event.request.message.spoken_text
+          },
+          title: display_title,
+          bodyItems:[{ primaryText: event.request.message.spoken_text}]
+        }]
+      }
+    });
   },
 
   _createNotification: function(token, data) {
