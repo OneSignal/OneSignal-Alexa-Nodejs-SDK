@@ -218,36 +218,45 @@ var OneSignal = {
       if (secOffset> ONE_DAY_SECONDS) {
         secOffset = ONE_DAY_SECONDS;
       }
-
+      
       expiryTime.setSeconds(expiryTime.getSeconds() + secOffset);
     }
-
+    
+    var spoken_content = {
+      locale: 'en-US',
+      text: event.request.message.spoken_text
+    };
+    
+    if (typeof event.request.message.ssml != 'undefined') {
+      spoken_content.ssml = event.request.message.ssml;
+    }
+    
     var display_title = event.request.message.display_title;
     if (typeof display_title == 'undefined') {
       display_title = event.request.message.spoken_text;
     }
-
-    OneSignal._createNotification(event.context.System.user.permissions.consentToken, {
+    
+    var display_content = {
+      locale: 'en-US',
+      toast: {
+        primaryText: event.request.message.spoken_text
+      },
+      title: display_title,
+      bodyItems:[{primaryText: event.request.message.spoken_text}]
+    };
+    
+    var payload = {
       expiryTime: expiryTime.toISOString(),
       referenceId: event.request.message.custom.i,
       spokenInfo: {
-        content:[{
-          locale: 'en-US',
-          text: event.request.message.spoken_text
-          // ssml: '<speak>Overrides text</speak>'
-        }]
+        content:[spoken_content]
       },
       displayInfo:{
-        content:[{
-          locale: 'en-US',
-          toast: {
-            primaryText: event.request.message.spoken_text
-          },
-          title: display_title,
-          bodyItems:[{ primaryText: event.request.message.spoken_text}]
-        }]
+        content:[display_content]
       }
-    });
+    };
+
+    OneSignal._createNotification(event.context.System.user.permissions.consentToken, payload);
   },
 
   _createNotification: function(token, data) {
