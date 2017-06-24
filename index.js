@@ -238,7 +238,9 @@ var OneSignal = {
         displayInfo:{
           content:[{
             locale: 'en-US',
-            toast:{ primaryText: event.request.message.spoken_text },
+            toast: {
+              primaryText: event.request.message.spoken_text
+            },
             title: display_title,
             bodyItems:[{ primaryText: event.request.message.spoken_text}]
          }]
