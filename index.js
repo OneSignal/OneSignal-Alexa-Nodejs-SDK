@@ -25,14 +25,14 @@
  * THE SOFTWARE.
  */
 
-const VERSION =  "000900";
-const API_HOST =  "onesignal.com";
+const VERSION =  '000900';
+const API_HOST =  'onesignal.com';
 const ONE_DAY_SECONDS = 86400;
 const ALEXA_DEVICE_TYPE = 10;
 
-const API_BASE_PATH =  "/api/v1/";
+const API_BASE_PATH =  '/api/v1/';
 const API_DEFAULT_HEADERS = {
-  "Content-Type": "application/json; charset=utf-8",
+  'Content-Type': 'application/json; charset=utf-8',
 };
 
 var OneSignal = {
@@ -76,8 +76,8 @@ var OneSignal = {
   _userPut: function(payload, error_string) {
     var options = {
       host: API_HOST,
-      path: API_BASE_PATH + "players/" + OneSignal._userId,
-      method: "PUT",
+      path: API_BASE_PATH + 'players/' + OneSignal._userId,
+      method: 'PUT',
       headers: API_DEFAULT_HEADERS
     };
 
@@ -88,7 +88,7 @@ var OneSignal = {
     });
 
     req.on('error', function(e) {
-      console.log("OneSignal - " + error_string + " ERROR:");
+      console.log('OneSignal - ' + error_string + ' ERROR:');
       console.log(e);
     });
 
@@ -106,20 +106,20 @@ var OneSignal = {
     }
 
     OneSignal._pendingTags = null;
-    OneSignal._userPut({tags: tags}, "sendTags");
+    OneSignal._userPut({tags: tags}, 'sendTags');
   },
 
   _registerDevice: function(data, mainScope, callback) {
-    var url_path = API_BASE_PATH + "players";
+    var url_path = API_BASE_PATH + 'players';
 
     if (OneSignal._userId != null) {
-       url_path += "/" + OneSignal._userId + "/on_session";
+       url_path += '/' + OneSignal._userId + '/on_session';
     }
 
     var options = {
       host: API_HOST,
       path: url_path,
-      method: "POST",
+      method: 'POST',
       headers: API_DEFAULT_HEADERS
     };
 
@@ -146,7 +146,7 @@ var OneSignal = {
     });
 
     req.on('error', function(e) {
-      console.log("OneSignal - Register device ERROR:");
+      console.log('OneSignal - Register device ERROR:');
       console.log(e);
     });
 
@@ -173,15 +173,15 @@ var OneSignal = {
 
   promptForNotificationPermissions: function(mainScope) {
     mainScope.handler.response = {
-      "version": "1.0",
-      "response": {
-        "outputSpeech": {
-          "type": "PlainText",
-          "text": "Please open the Alexa App and accept the notification permissin card."
+      version: '1.0',
+      response: {
+        outputSpeech: {
+          type: 'PlainText',
+          text: 'Please open the Alexa App and accept the notification permissin card.'
         },
-        "card": {
-          "type": "AskForPermissionsConsent",
-          "permissions": ["write::alexa:devices:all:notifications:standard"]
+        card: {
+          type: 'AskForPermissionsConsent',
+          permissions: ['write::alexa:devices:all:notifications:standard']
         }
       }
     };
@@ -200,7 +200,7 @@ var OneSignal = {
 
      if (!OneSignal.hasNotificationPermissions(event)) {
        if (OneSignal._userId != null) {
-         OneSignal._userPut({notification_types: 0}, "unsubscribing");
+         OneSignal._userPut({notification_types: 0}, 'unsubscribing');
        }
        return;
      }
@@ -225,18 +225,18 @@ var OneSignal = {
       }
 
       OneSignal._createNotification(event.context.System.user.permissions.consentToken, {
-        "expiryTime": expiryTime.toISOString(),
-        "referenceId": event.request.message.custom.i,
-        "spokenInfo": {
-          "content":[{
-             "locale": "en-US",
-             "text": event.request.message.spoken_text
-  //         "ssml": "<speak>Overrides text</speak>"
+        expiryTime: expiryTime.toISOString(),
+        referenceId: event.request.message.custom.i,
+        spokenInfo: {
+          content:[{
+             locale: 'en-US',
+             text: event.request.message.spoken_text
+             // ssml: '<speak>Overrides text</speak>'
           }]
         },
         displayInfo:{
           content:[{
-            locale: "en-US",
+            locale: 'en-US',
             toast:{ primaryText: event.request.message.spoken_text },
             title: display_title,
             bodyItems:[{ primaryText: event.request.message.spoken_text}]
@@ -247,11 +247,11 @@ var OneSignal = {
 
   _createNotification: function(token, data) {
     var options = {
-      host: "api.amazonalexa.com",
-      path: "/v2/notifications",
-      method: "POST",
+      host: 'api.amazonalexa.com',
+      path: '/v2/notifications',
+      method: 'POST',
       headers: Object.assign({
-        "Authorization": "Bearer " + token
+        Authorization: 'Bearer ' + token
       }, API_DEFAULT_HEADERS)
     };
 
@@ -262,7 +262,7 @@ var OneSignal = {
     });
 
     req.on('error', function(e) {
-      console.log("OneSignal - Error sending create notification:");
+      console.log('OneSignal - Error sending create notification:');
       console.log(e);
     });
 
