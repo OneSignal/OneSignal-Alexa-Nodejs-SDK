@@ -52,13 +52,15 @@ var OneSignal = {
   },
 
   // Alexa Skill event handlers
+  //
+  // Note that the Alexa SDK expects the keys to be strings.
   _alexaHandlers: {
-   // Messaging.MessageReceived':
-    Unhandled: function() {
+    // Messaging.MessageReceived':
+    'Unhandled': function() {
       OneSignal._stateSetup(this);
       OneSignal._processMessageReceived(this.event);
     },
-    LaunchRequest: function () {
+    'LaunchRequest': function () {
       OneSignal._stateSetup(this);
       OneSignal._newSession(this);
     }
