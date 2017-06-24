@@ -25,6 +25,8 @@
  * THE SOFTWARE.
  */
 
+var https = require('https');
+
 const VERSION =  '000900';
 const API_HOST =  'onesignal.com';
 const ONE_DAY_SECONDS = 86400;
@@ -81,7 +83,6 @@ var OneSignal = {
       headers: API_DEFAULT_HEADERS
     };
 
-    var https = require('https');
     var req = https.request(options, function(res) {
       res.on('data', function(data) {
       });
@@ -128,7 +129,6 @@ var OneSignal = {
       OneSignal._pendingTags = null;
     }
 
-    var https = require('https');
     var req = https.request(options, function(res) {
       res.on('data', function(data) {
         var data = JSON.parse(data);
@@ -258,7 +258,6 @@ var OneSignal = {
       }, API_DEFAULT_HEADERS)
     };
 
-    var https = require('https');
     var req = https.request(options, function(res) {
       res.on('data', function(data) {
       });
