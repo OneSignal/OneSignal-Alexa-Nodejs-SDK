@@ -25,17 +25,15 @@
  * THE SOFTWARE.
  */
 
+const VERSION =  "000900";
+const API_HOST =  "onesignal.com";
+
+const API_BASE_PATH =  "/api/v1/";
+const API_DEFAULT_HEADERS = {
+  "Content-Type": "application/json; charset=utf-8",
+};
 
 var OneSignal = {
-  _VERSION: "000900",
-
-  _API_HOST: "onesignal.com",
-
-  _API_BASE_PATH: "/api/v1/",
-  _API_DEFAULT_HEADERS: {
-    "Content-Type": "application/json; charset=utf-8",
-  },
-
   // attributes that are saved and read from the DB.
   _scope_attributes: null,
 
@@ -75,10 +73,10 @@ var OneSignal = {
 
   _userPut: function(payload, error_string) {
     var options = {
-      host: OneSignal._API_HOST,
-      path: OneSignal._API_BASE_PATH + "players/" + OneSignal._userId,
+      host: API_HOST,
+      path: API_BASE_PATH + "players/" + OneSignal._userId,
       method: "PUT",
-      headers: OneSignal._API_DEFAULT_HEADERS
+      headers: API_DEFAULT_HEADERS
     };
 
     var https = require('https');
@@ -109,16 +107,16 @@ var OneSignal = {
   },
 
   _registerDevice: function(data, mainScope, callback) {
-    var url_path = OneSignal._API_BASE_PATH + "players";
+    var url_path = API_BASE_PATH + "players";
 
     if (OneSignal._userId != null)
        url_path += "/" + OneSignal._userId + "/on_session";
 
     var options = {
-      host: OneSignal._API_HOST,
+      host: API_HOST,
       path: url_path,
       method: "POST",
-      headers: OneSignal._API_DEFAULT_HEADERS
+      headers: API_DEFAULT_HEADERS
     };
 
     if (OneSignal._pendingTags != null) {
@@ -242,8 +240,9 @@ var OneSignal = {
       host: "api.amazonalexa.com",
       path: "/v2/notifications",
       method: "POST",
-      headers: Object.assign({"Authorization": "Bearer " + token},
-                             OneSignal._API_DEFAULT_HEADERS)
+      headers: Object.assign({
+        "Authorization": "Bearer " + token
+      }, API_DEFAULT_HEADERS)
     };
 
     var https = require('https');
