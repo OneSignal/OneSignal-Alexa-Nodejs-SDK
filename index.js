@@ -131,8 +131,9 @@ var OneSignal = {
     var https = require('https');
     var req = https.request(options, function(res) {
       res.on('data', function(data) {
-        if (typeof JSON.parse(data).id != 'undefined') {
-           OneSignal._userId = JSON.parse(data).id;
+        var data = JSON.parse(data);
+        if (typeof data.id != 'undefined') {
+           OneSignal._userId = data.id;
 
            if (OneSignal._pendingTags == null) {
              OneSignal.sendTags(OneSignal._pendingTags);
