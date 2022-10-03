@@ -3,7 +3,7 @@
 
 **Deprecation Notice**
 
-The _OneSignal-Alexa-Nodejs-SDK_ has been deprecated. OneSignal no longer provides official support for Alexa. The last version released for Alexa >= x was v0.9.0. Please do not use _OneSignal-Alexa-Nodejs-SDK_ in any future projects; use [OneSignal API](https://documentation.onesignal.com/reference/create-notification) instead.
+The _OneSignal-Alexa-Nodejs-SDK_ has been deprecated. OneSignal no longer provides official support for Alexa. The last version released is v0.9.0. Please do not use _OneSignal-Alexa-Nodejs-SDK_ in any future projects; use [OneSignal API](https://documentation.onesignal.com/reference/create-notification) instead.
 
 -----
 
